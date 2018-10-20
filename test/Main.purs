@@ -2,9 +2,11 @@ module Test.Main where
 
 import Prelude
 
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Console (log, logShow)
+import Effect.Ref as Ref
 
 {-
 http://okmij.org/ftp/tagless-final/cookbook.html#CPS
@@ -83,11 +85,25 @@ runValue (S ma) = ma
 
 data Lazy 
 
--- ...
+share ∷ ∀ m a. MonadEffect m ⇒ m a → m (m a)
+share ma = do
+  r ← liftEffect $ Ref.new Nothing
+  pure $ do
+    mma ← liftEffect $ Ref.read r
+    case mma of
+      Just ma' → ma' -- return previously calculated value
+      Nothing → do
+        a ← ma -- calc value
+        liftEffect $ Ref.write (Just $ pure a) r
+        pure a
 
+instance symLamSL ∷ (Monad m, MonadEffect m) ⇒ SymLam (S Lazy m) where
+  lam f = pure \ma → share ma >>= f
+
+runLazy ∷ ∀ m a. S Lazy m a → m a
+runLazy (S ma) = ma
 
 main ∷ Effect Unit
 main = do
-  x ← runName t2
+  x ← runLazy t2
   logShow x
-
