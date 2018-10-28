@@ -1,4 +1,4 @@
-module Main where
+module GADTs.ExprLeibnizTagless where
 
 import Prelude
 
@@ -94,6 +94,7 @@ evalC = unwrap
 main ∷ Effect Unit
 main = do
   let
+    -- explicit types not necessary, because of `evalC`
     (x1 ∷ Identity Int) = int 1
     (x2 ∷ Identity Int) = int 2
     (xTrue ∷ Identity Boolean) = bool true

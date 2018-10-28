@@ -9,7 +9,7 @@ import Effect.Console (log, logShow)
 import Effect.Ref as Ref
 
 {-
-http://okmij.org/ftp/tagless-final/cookbook.html#CPS
+http://okmij.org/ftp/tagless-final/cookbook.html#call-by-any
 -}
 
 class Symantics repr where
