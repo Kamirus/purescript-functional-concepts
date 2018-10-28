@@ -1,4 +1,4 @@
-module Test.Main where
+module Tagless where
 
 import Prelude
 
