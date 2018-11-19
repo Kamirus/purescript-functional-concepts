@@ -8,9 +8,7 @@ import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Console (log, logShow)
 import Effect.Ref as Ref
 
-{-
-http://okmij.org/ftp/tagless-final/cookbook.html#call-by-any
--}
+-- | http://okmij.org/ftp/tagless-final/cookbook.html#call-by-any
 
 class Symantics repr where
   int ∷ Int → repr Int                          -- integer literals
@@ -30,8 +28,8 @@ let_
   ⇒ repr a → (repr a → repr b) → repr b
 let_ x y = (lam y) `app` x
 
--- The representation of the lambda-calculus term
--- (\z x -> let y = x + x in y + y) (100 - 10) (5 + 5) 
+-- | The representation of the lambda-calculus term
+-- | (\z x -> let y = x + x in y + y) (100 - 10) (5 + 5) 
 t2 ∷ ∀ repr. Symantics repr ⇒ SymLam repr => repr Int
 t2 = (lam \z → lam \x → let_ (x `add` x) \y → y `add` y)
     `app` (int 100 `sub` int 10)

@@ -1,10 +1,15 @@
-module Exists where
+module Exists
+  ( Exists
+  , mkExists
+  , runExists
+  ) where
 
--- data E f = forall a. E (f a)
-data E f = E (∀ b. (∀ a. f a → b) → b)
+-- | https://wiki.haskell.org/Rank-N_types
+-- | data Exists f = forall a. Exists (f a)
+data Exists f = Exists (∀ r. (∀ a. f a → r) → r)
 
-mkExists ∷ ∀ f a. f a → E f
-mkExists fa = E \g → g fa
+mkExists ∷ ∀ f a. f a → Exists f
+mkExists fa = Exists \g → g fa
 
-runExists ∷ ∀ f r. (∀ a. f a → r) → E f → r
-runExists g (E un) = un g
+runExists ∷ ∀ f r. (∀ a. f a → r) → Exists f → r
+runExists g (Exists un) = un g

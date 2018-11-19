@@ -8,31 +8,27 @@ import Data.Newtype (unwrap)
 import Effect (Effect)
 import Effect.Console (logShow)
 
-{-
-
-Implement this simple GADT with eval function
-  Method 1: Leibniz equality (https://pursuit.purescript.org/packages/purescript-leibniz)
-  Method 2: Tagless
-
-data Expr a where
-  I   ∷ Int  → Expr Int
-  B   ∷ Bool → Expr Bool
-  Add ∷ Expr Int → Expr Int → Expr Int
-  Eq  ∷ Eq a ⇒ Expr a → Expr a → Expr Bool
-
-eval ∷ Expr a → a
-eval (I n) = n
-eval (B b) = b
-eval (Add e1 e2) = eval e1 + eval e2
-eval (Eq  e1 e2) = eval e1 == eval e2
-
--}
-
--- This method uses Leibniz equality
--- additional type variable 'b is needed, 
---   because constructor Eq requires 'a to have Eq instance.
---   Commented line below explains this further.
--- Notice that Eq a ⇒ is not here
+-- | Implement this simple GADT with eval function
+-- |   Method 1: Leibniz equality (https://pursuit.purescript.org/packages/purescript-leibniz)
+-- |   Method 2: Tagless
+-- | 
+-- | data Expr a where
+-- |   I   ∷ Int  → Expr Int
+-- |   B   ∷ Bool → Expr Bool
+-- |   Add ∷ Expr Int → Expr Int → Expr Int
+-- |   Eq  ∷ Eq a ⇒ Expr a → Expr a → Expr Bool
+-- | 
+-- | eval ∷ Expr a → a
+-- | eval (I n) = n
+-- | eval (B b) = b
+-- | eval (Add e1 e2) = eval e1 + eval e2
+-- | eval (Eq  e1 e2) = eval e1 == eval e2
+-- | 
+-- | This method uses Leibniz equality
+-- | additional type variable 'b is needed, 
+-- |   because constructor Eq requires 'a to have Eq instance.
+-- |   Commented line below explains this further.
+-- | Notice that Eq a ⇒ is not here
 data Expr a b -- arguments of type 'a, result of type 'b
   = I Int (Int ~ b)
   | B Boolean (Boolean ~ b)
@@ -70,18 +66,18 @@ leibnizMain = do
 ---
 ---
 
--- Tagless approach
-
--- This is just a description; operations on abstract data 'repr
--- Notice that Eq 'a ⇒ is in the 'description'
+-- | Tagless approach
+-- |
+-- | This is just a description; operations on abstract data 'repr
+-- | Notice that Eq 'a ⇒ is in the 'description'
 class ExprC repr where
   int ∷ Int → repr Int
   bool ∷ Boolean → repr Boolean
   add ∷ repr Int → repr Int → repr Int
   eqq ∷ ∀ a. Eq a ⇒ repr a → repr a → repr Boolean
 
--- We just need simple representation
--- This instance is secretly doing eval's job. It's not building data structure, that is later evaluated by eval
+-- | We just need simple representation
+-- | This instance is secretly doing eval's job. It's not building data structure, that is later evaluated by eval
 instance exprCIdentity ∷ ExprC Identity where
   int x = Identity x
   bool x = Identity x

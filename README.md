@@ -5,6 +5,13 @@ How to run?
 
 ## Files
 
+#### Exists and Exists.Example
+
+Exists implementation without GADTs nor cheats
+
+Example shows simple uses, and points out that sometimes we need some constraints for 'hidden' type.
+That would require to write new Exists data type for such use case. Further research is needed in this field.
+
 #### GADTs/ExprLeibnizTagless
 
 Express `Expr a` GADT without this extension
