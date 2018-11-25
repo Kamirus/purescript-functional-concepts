@@ -5,6 +5,10 @@ How to run?
 
 ## Files
 
+#### Equal
+
+Leibniz equality pure implementation
+
 #### Exists and Exists.Example
 
 Exists implementation without GADTs nor cheats
