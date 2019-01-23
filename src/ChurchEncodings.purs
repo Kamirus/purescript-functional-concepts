@@ -75,7 +75,7 @@ cons ∷ ∀ a. a → List a → List a
 cons x l = List \e c → c x $ unList l e c
 
 map ∷ ∀ a b. (a → b) → List a → List b
-map f l = unList l nil \a acc → cons (f a) acc
+map f l = List \e c → unList l e \a acc → c (f a) acc
 
 len ∷ ∀ a. List a → Int
 len l = unList l 0 \_ acc → acc + 1
