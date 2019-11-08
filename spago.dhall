@@ -5,16 +5,17 @@ You can edit this file as you like.
 { name =
     "gadts"
 , dependencies =
-    [ "console"
+    [ "arrays"
+    , "console"
     , "effect"
     , "leibniz"
+    , "matryoshka"
     , "maybe"
     , "prelude"
     , "psci-support"
+    , "record"
     , "refs"
     , "tuples"
-    , "arrays"
-    , "record"
     ]
 , packages =
     ./packages.dhall
