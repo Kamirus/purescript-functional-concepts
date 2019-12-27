@@ -137,7 +137,22 @@ let additions =
       , version = 
           "v0.4.0"
       }
-
+  , prettier-printer = 
+      { dependencies = 
+          [ "console"
+          , "lists"
+          , "prelude"
+          , "psci-support"
+          , "quickcheck"
+          , "spec"
+          , "spec-discovery"
+          , "tuples"
+          ]
+      , repo =
+          "https://github.com/paulyoung/purescript-prettier-printer.git"
+      , version = 
+          "paulyoung/spago"
+      }
   }
 
 in  upstream // overrides // additions

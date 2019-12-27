@@ -16,6 +16,7 @@ You can edit this file as you like.
     , "record"
     , "refs"
     , "tuples"
+    , "prettier-printer"
     ]
 , packages =
     ./packages.dhall
