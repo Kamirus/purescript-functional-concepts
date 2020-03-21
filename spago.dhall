@@ -11,12 +11,16 @@ You can edit this file as you like.
     , "leibniz"
     , "matryoshka"
     , "maybe"
+    , "postgresql-client"
     , "prelude"
+    , "prettier-printer"
+    , "prettyprinter"
     , "psci-support"
     , "record"
     , "refs"
+    , "selda"
     , "tuples"
-    , "prettier-printer"
+    , "typelevel-eval"
     ]
 , packages =
     ./packages.dhall
