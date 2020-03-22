@@ -82,6 +82,31 @@ data TreeF a r
 derive instance treeFFunctor ∷ Functor (TreeF a)
 
 --------------------------------------------------------------------------------
+-- Define Y = \f . (\x . f (x x)) (\x . f (x x))
+
+newtype Self a = Fold (Self a → a)
+
+unFold ∷ ∀ a. Self a → Self a → a
+unFold (Fold f) = f
+
+-- | This version works for Haskell 
+fixY_haskell ∷ ∀ a. (a → a) → a
+fixY_haskell f = w $ Fold w
+  where
+    w ∷ Self a → a
+    w x = f $ unFold x x
+
+-- | Our strict version requires the eta expansion
+fixY ∷ ∀ a b. ((a → b) → a → b) → a → b
+fixY f = w (Fold w)
+  where
+    w ∷ Self (a → b) → a → b
+    w x a = f (unFold x x) a
+
+factorial' ∷ Int → Int
+factorial' = fixY factF
+
+--------------------------------------------------------------------------------
 -- WIP
 type Tree' a = Mu (TreeF a)
 
