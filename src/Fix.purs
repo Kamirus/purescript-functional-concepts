@@ -107,6 +107,24 @@ factorial' ∷ Int → Int
 factorial' = fixY factF
 
 --------------------------------------------------------------------------------
+-- Define Θ = A A
+--        where A = \x y . y (x x y)
+
+fixTheta_haskell ∷ ∀ z. (z → z) → z
+fixTheta_haskell = _A $ Fold _A
+  where
+    _A ∷ ∀ a b. Self ((a → b) → a) → (a → b) → b
+    _A x y = y (unFold x x y)
+
+fixTheta ∷ ∀ a b. ((a → b) → a → b) → a → b
+fixTheta = _A $ Fold _A
+  where
+    _A x y z = y (unFold x x y) z
+
+factorial'' ∷ Int → Int
+factorial'' = fixTheta factF
+
+--------------------------------------------------------------------------------
 -- WIP
 type Tree' a = Mu (TreeF a)
 
