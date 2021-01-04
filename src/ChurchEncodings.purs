@@ -25,7 +25,6 @@ false_ = \x y → y
 if_ ∷ ∀ b. Bool → b → b → b
 if_ b e1 e2 = b (const e1) (const e2) $ unit_
 
--- type system is not powerful enough to handle pred without wrapper
 type PAIR a b = ∀ r. (a → b → r) → r
 newtype Pair a b = Pair (PAIR a b)
 unPair ∷ ∀ a b. Pair a b → PAIR a b
@@ -40,6 +39,19 @@ fst_ r = unPair r \x _ → x
 snd_ ∷ ∀ a b. Pair a b → b
 snd_ r = unPair r \_ y → y
 
+
+pair' ∷ ∀ a b. a → b → PAIR a b
+pair' x y = \f → f x y
+
+fst_' ∷ ∀ a b. PAIR a b → a
+fst_' r = r \x _ → x
+
+snd_' ∷ ∀ a b. PAIR a b → b
+snd_' r = r \_ y → y
+
+
+-- Without impredicative polymorphism we cannot write `pred` without a newtype wrapper
+-- We cannot substitute a polymorphic type for a type variable `a`
 type NAT = ∀ a. (a → a) → a → a
 newtype Nat = Nat NAT
 unNat ∷ Nat → NAT
@@ -49,7 +61,7 @@ zero ∷ Nat
 zero = Nat \s z → z
 
 succ ∷ Nat → Nat
-succ n = Nat \s z → s $ (unNat n) s z
+succ n = Nat \s z → s $ unNat n s z
 
 add ∷ Nat → Nat → Nat
 add n1 n2 = Nat \s z → unNat n1 s (unNat n2 s z)
@@ -60,8 +72,38 @@ mul n1 n2 = Nat \s z → unNat n1 (\n → unNat n2 s n) z
 isZero ∷ Nat → Bool
 isZero n = unNat n (const false_) true_
 
+-- pred' ∷ ∀ n. NAT → (n → n) → n → n
+-- pred' n s z = n' f p0
+--   where
+--     -- we cannot type check it because we would need to substitute type variable with a polymorphic type `PAIR n n`
+--     -- with an explicit type application it would look like: n @(PAIR n n)
+--     n' ∷ (PAIR n n → PAIR n n) → PAIR n n → PAIR n n
+--     n' = n
+
+--     f ∷ PAIR n n → PAIR n n
+--     f p = pair' (snd_' p) (s $ snd_' p)
+
+--     p0 ∷ PAIR n n
+--     p0 = pair' z z
+
 pred ∷ Nat → Nat
 pred n = Nat \s z → fst_ $ unNat n (\p → pair (snd_ p) (s $ snd_ p)) (pair z z)
+
+predElaborated ∷ Nat → Nat
+predElaborated n = Nat auxPred
+  where
+    auxPred ∷ ∀ r. (r → r) → r → r
+    auxPred s z = fst_ aux
+      where
+        aux ∷ Pair r r
+        aux = unNat n f p0
+
+        f ∷ Pair r r → Pair r r
+        f p = pair (snd_ p) (s $ snd_ p)
+
+        p0 ∷ Pair r r
+        p0 = pair z z
+
 
 type LIST a = ∀ r. r → (a → r → r) → r
 newtype List a = List (LIST a)
