@@ -45,3 +45,5 @@ Simple tagless form for operations: `+` and `if`
 #### Tagless
 
 [tagless-final embedding of the simply-typed lambda-calculus with integers and constants, and its uniform interpretations with three different evaluation strategies: call-by-name, call-by-value and call-by-need](http://okmij.org/ftp/tagless-final/cookbook.html#call-by-any)
+
+On why tagless final is better than Leibniz - https://hgiasac.github.io/posts/2018-12-18-PureScript-GADTs-Alternatives---Recap.html
